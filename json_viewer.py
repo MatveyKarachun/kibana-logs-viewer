@@ -3,31 +3,24 @@ import json
 
 parser = argparse.ArgumentParser(description='Filter log JSON file.')
 parser.add_argument('filename', type=str, help='The path to the JSON file.')
+parser.add_argument('output', type=str, help='The path to the output file.')
 
 args = parser.parse_args()
 
 with open(args.filename, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
-for hit in data['hits']['hits']:
-    source = hit['_source']
-    log_text = source.get('text', 'N/A')
+with open(args.output, 'w', encoding='utf-8') as f_out:
+    for hit in data['hits']['hits']:
+        source = hit['_source']
+        log_text = source.get('text', 'N/A')
 
-    if "FreeMarker" in log_text:
-        continue
-    print(f"{source.get('localTime', 'N/A')}")
-    print(f"{source.get('text', 'N/A')}")
-
-    print()
-
-    print(f"{source.get('podName', 'N/A')}", end=' ')
-    print(f"{source.get('level', 'N/A')}", end=' ')
-    print(f"{source.get('callerClass', 'N/A')}", end=' ')
-    print(f"{source.get('callerMethod', 'N/A')}", end=' ')
-    print(f"{source.get('callerLine', 'N/A')}")
-    print(f"{source.get('traceId', 'N/A')}")
-    print(f"{source.get('stack', 'N/A')}")
-
-    print()
-    print("----")
-    print()
+        output = [
+            f"{source.get('localTime', 'N/A')}\n",
+            f"{source.get('text', 'N/A')}\n\n",
+            f"{source.get('podName', 'N/A')} {source.get('level', 'N/A')} {source.get('callerClass', 'N/A')} {source.get('callerMethod', 'N/A')} {source.get('callerLine', 'N/A')}\n",
+            f"{source.get('traceId', 'N/A')}\n",
+            f"{source.get('stack', 'N/A')}\n",
+            "----\n\n\n"
+        ]
+        f_out.writelines(output)
