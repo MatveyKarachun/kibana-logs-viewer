@@ -4,6 +4,7 @@ import json
 parser = argparse.ArgumentParser(description='Filter log JSON file.')
 parser.add_argument('filename', type=str, help='The path to the JSON file.')
 parser.add_argument('output', type=str, help='The path to the output file.')
+parser.add_argument('--skip_stack', action='store_true', default=True, help='Show stack (default: True)')
 
 args = parser.parse_args()
 
@@ -20,7 +21,11 @@ with open(args.output, 'w', encoding='utf-8') as f_out:
             f"{source.get('text', 'N/A')}\n\n",
             f"{source.get('podName', 'N/A')} {source.get('level', 'N/A')} {source.get('callerClass', 'N/A')} {source.get('callerMethod', 'N/A')} {source.get('callerLine', 'N/A')}\n",
             f"{source.get('traceId', 'N/A')}\n",
-            f"{source.get('stack', 'N/A')}\n",
-            "----\n\n\n"
         ]
+
+        if not args.skip_stack:
+            output.append(f"{source.get('stack', 'N/A')}\n")
+
+        output.append("----\n\n\n")
+
         f_out.writelines(output)
