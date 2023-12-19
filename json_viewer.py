@@ -4,7 +4,7 @@ import json
 parser = argparse.ArgumentParser(description='Filter log JSON file.')
 parser.add_argument('filename', type=str, help='The path to the JSON file.')
 parser.add_argument('output', type=str, help='The path to the output file.')
-parser.add_argument('--skip_stack', action='store_true', default=True, help='Show stack (default: True)')
+parser.add_argument('--skip_stack', action='store_true', default=False, help='Show stack (default: True)')
 
 args = parser.parse_args()
 
